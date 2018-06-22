@@ -13,6 +13,15 @@ def acquisition_plan(dets, motors, fs, sample_name, images_per_set=None):
         sample_name : the sample name
     '''
     start_time = time.time()
+    dark_dets = list()
+    for det in dets:
+        if hasattr(det, 'dark_det'):
+            print('got dark det')
+            dark_dets.append(det.dark_det)
+        else:
+            print('no dark det')
+            dark_dets.append(det)
+
     def myplan():
         
         for det in dets:
@@ -25,7 +34,7 @@ def acquisition_plan(dets, motors, fs, sample_name, images_per_set=None):
         yield from bps.sleep(1)
         # close fast shutter, now take a dark
         yield from bps.mov(fs,0)
-        yield from trigger_and_read(dets + motors, name='dark')
+        yield from trigger_and_read(dark_dets + motors, name='dark')
         # open fast shutter
         yield from bps.mov(fs,1)
         # for the motors, trigger() won't be called since it doesn't exist

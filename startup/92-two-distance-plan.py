@@ -26,6 +26,12 @@ def two_distance_plan(dets, motor, fs, cryostream, sample_name, distances, image
 	distances : list
 	    a list of distances desired
     '''
+    dark_dets = list()
+    for det in dets:
+        if hasattr(det, 'dark_det'):
+            dark_dets.append(det.dark_det)
+        else:
+            dark_dets.append(det)
     def myplan():
         
         # set the number of images per set here
@@ -49,7 +55,7 @@ def two_distance_plan(dets, motor, fs, cryostream, sample_name, distances, image
 
             # close fast shutter, now take a dark
             yield from bps.mov(fs,0)
-            yield from trigger_and_read(dets + [motor, cryostream], name='dark')
+            yield from trigger_and_read(dark_dets + [motor, cryostream], name='dark')
             # open fast shutter
             yield from bps.mov(fs,1)
             # for the motors, trigger() won't be called since it doesn't exist
@@ -88,6 +94,12 @@ def temperature_distance_plan(dets, motor, fs, cryostream, sample_name, distance
             Will go to temp=300, then distance 1400, and 1500
                 then temp=305, and distance 1400, 1500
     '''
+    dark_dets = list()
+    for det in dets:
+        if hasattr(det, 'dark_det'):
+            dark_dets.append(det.dark_det)
+        else:
+            dark_dets.append(det)
     def myplan():
         
         # set the number of images per set here
@@ -120,7 +132,7 @@ def temperature_distance_plan(dets, motor, fs, cryostream, sample_name, distance
     
                 # close fast shutter, now take a dark
                 yield from bps.mov(fs,0)
-                yield from trigger_and_read(dets + [motor, cryostream], name='dark')
+                yield from trigger_and_read(dark_dets + [motor, cryostream], name='dark')
                 # open fast shutter
                 yield from bps.mov(fs,1)
                 # for the motors, trigger() won't be called since it doesn't exist

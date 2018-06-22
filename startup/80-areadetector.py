@@ -258,11 +258,14 @@ pe1c = PerkinElmerContinuous('XF:28ID1-ES{Det:PE1}', name='pe1c',
                              read_attrs=['tiff', 'stats1.total'],
                              plugin_name='tiff')
 
+from ophyd.status import Status
 import time
 class CachedDetector:
     '''
         This is a dark image detector. It doesn't do anything.
         This detector does not support a hierarchy of devices!
+
+        NOTE : This is a test and a prelude to read_mode upgrade in ophyd
 
     '''
     def __init__(self, det, attrs, expire_time):
@@ -277,41 +280,73 @@ class CachedDetector:
         self._expire_time = expire_time
         self._read_cache = dict()
         self._current_read = None
+        self.parent = self._det.parent
+        self.name = self._det.name
 
     def trigger(self):
         '''
             Trigger the detector.
             Checks the cache and time
         '''
+        if self._det._staged != self._det._staged.yes:
+            raise ValueError("Error, parent detector not staged, please stage")
+
         # check the cache
-        attr_vals = (obj.get() for obj in self._attrs)
+        attr_vals = tuple([obj.get() for obj in self._attrs])
         self._cur_attr_vals = attr_vals
 
         read_val = self._read_cache.get(attr_vals, None)
         if read_val is None:
-            self._det.trigger()
+            st = self._det.trigger()
+            # this should have called generate_datum, so no race condition
+            # this will just read the filename
             new_val = self._det.read()
-            self._read_cache[attr_vals] = {'time': time.time(),
-                                            'data':  new_val}
-        # trigger etc need to finish later
-        data = self._read_cache[attr_vals]
-        if np.abs(data['time']-time.time()) . self._expire_time:
-            self._det.trigger()
-            new_val = self._det.read()
-            self._read_cache[attr_vals] = {'time': time.time(),
-                                            'data':  new_val}
+            self._read_cache[attr_vals] = {'time' : time.time(),
+                                            'data' : new_val}
+        else:
+            # read the data
+            data = self._read_cache[attr_vals]
+            if np.abs(data['time']-time.time()) - self._expire_time:
+                st = self._det.trigger()
+                new_val = self._det.read()
+                self._read_cache[attr_vals] = {'time': time.time(),
+                                                'data':  new_val}
+            st = Status()
+            st._finished()
+
+        return st
 
 
     def read(self):
-        return self._read_cache[self_cur_attr_vals]['data']
+        return self._read_cache[self._cur_attr_vals]['data']
+
+    def describe(self):
+        return self._det.describe()
+
+    def describe_configuration(self):
+        return self._det.describe_configuration()
+
+    def read_configuration(self):
+        return self._det.read_configuration()
 
 
-    # TODO: maybe check if det is staged
     def stage(self):
         pass
 
     def unstage(self):
         pass
+
+
+# 1 day time for caching
+pe1cd = CachedDetector(pe1c, [pe1c.number_of_sets, pe1c.images_per_set], 3600*3)
+pe1d = CachedDetector(pe1, [pe1.number_of_sets, pe1.images_per_set], 3600*3)
+
+# assign the cached detector to the pe's
+# the plans will look for a 'dark_det' attribute
+# this is a prelude to looking for read_mode (which will be implemented
+# completely differently)
+pe1c.dark_det = pe1cd
+#pe1.dark_det = pe1d
 
 # some defaults, as an example of how to use this
 # pe1.configure(dict(images_per_set=6, number_of_sets=10))
