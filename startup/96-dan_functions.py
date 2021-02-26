@@ -11,8 +11,12 @@ import numpy as np
 
 
 ##############
-slack_token = os.environ["SLACK_API_TOKEN"]
-client = WebClient(token=slack_token)
+try:
+    slack_token = os.environ["SLACK_API_TOKEN"]
+except KeyError:
+    client = None
+else:
+    client = WebClient(token=slack_token)
 
 
 ###
