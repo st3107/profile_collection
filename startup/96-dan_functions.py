@@ -1,6 +1,6 @@
 import sys
-from slack import WebClient
-from slack.errors import SlackApiError
+#from slack import WebClient
+#from slack.errors import SlackApiError
 import os
 import bluesky.plan_stubs as bps
 import bluesky.plans as bp
@@ -11,47 +11,47 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 ##############
-slack_token = os.environ["SLACK_API_TOKEN"]
-client = WebClient(token=slack_token)
+#slack_token = os.environ["SLACK_API_TOKEN"]
+#client = WebClient(token=slack_token)
 
 
 ###
 
 
-def slack_message(my_message):
-    try:
-        response = client.chat_postMessage(
-            channel="pdf_dev",
-            # channel = user_name,
-            text=my_message,
-        )
-    # except SlackApiError as e:
-    #    assert e.response["something went wrong"]
-    except:
-        print("slack message failed")
+#def slack_message(my_message):
+#    try:
+#        response = client.chat_postMessage(
+#            channel="pdf_dev",
+#            # channel = user_name,
+#            text=my_message,
+#        )
+#    # except SlackApiError as e:
+#    #    assert e.response["something went wrong"]
+#    except:
+#        print("slack message failed")
 
 
-def check_heartbeat(
-    fname="hbeat.txt", tlapse=300, send_warning=False, notify_user=False
-):
-    fin = open(fname, "r")
-    tread = float(fin.read())
-    tpassed = time.time() - tread
-    if tpassed > tlapse:
-        tpassed_str = str(tpassed / 60)[:3]
-        if send_warning:
-            msg_to_send = "Issue detected, no pulse in " + tpassed_str + " mins"
-            if notify_user:
-                msg_to_send = "<@" + str(user_ID) + "> " + msg_to_send
-            slack_message(msg_to_send)
-        return False
-    return True
+#def check_heartbeat(
+#    fname="hbeat.txt", tlapse=300, send_warning=False, notify_user=False
+#):
+#    fin = open(fname, "r")
+#    tread = float(fin.read())
+#    tpassed = time.time() - tread
+#    if tpassed > tlapse:
+#        tpassed_str = str(tpassed / 60)[:3]
+#        if send_warning:
+#            msg_to_send = "Issue detected, no pulse in " + tpassed_str + " mins"
+#            if notify_user:
+#                msg_to_send = "<@" + str(user_ID) + "> " + msg_to_send
+#            slack_message(msg_to_send)
+#        return False
+#    return True
 
 
-def update_heartbeat(fname="hbeat.txt"):
-    fout = open(fname, "w")
-    fout.write(str(time.time()))
-    fout.close()
+#def update_heartbeat(fname="hbeat.txt"):
+#    fout = open(fname, "w")
+#    fout.write(str(time.time()))
+#    fout.close()
 
 
 ###
@@ -286,7 +286,7 @@ def read_twocol_data(
 
 
 # setup pandas dataframe
-def make_me_a_dataframe(found_pos):
+def make_me_a_dataframe(found_pos,cut_start = None, cut_end = None):
     import glob as glob
     import pandas as pd
 
@@ -298,6 +298,10 @@ def make_me_a_dataframe(found_pos):
         return None
 
     read_xcel = pd.read_excel(my_excel_file, skiprows=1, usecols=([0, 1]))
+    if cut_start != None:
+        print ('cutting down')
+        read_xcel = read_xcel.loc[cut_start:cut_end,:]
+        read_xcel.index = range(len(read_xcel.index))
 
     print ('expecting length '+str(len(np.array(read_xcel.index))))
 
@@ -694,4 +698,90 @@ def save_history(histfile,LIMIT=5000):
         # limit to LIMIT entries
         f.writelines(lines[-LIMIT:])
 
+
+
+def phase_parser(phase_str):
+    """parser for field with <chem formula>: <phase_amount>
+    Parameters
+    ----------
+    phase_str : str
+        a string contains a series of <chem formula> : <phase_amount>.
+        Each phase is separated by a comma.
+    Returns
+    -------
+    composition_dict : dict
+        a dictionary contains {element: stoichiometry}.
+    phase_dict : dict
+        a dictionary contains relative ratio of phases.
+    composition_str : str
+        a string with the format PDF transfomation software
+        takes. default is pdfgetx
+    Examples
+    --------
+    rv = cls.phase_parser('NaCl:1, Si:2')
+    rv[0] # {'Na':0.33, 'Cl':0.33, 'Si':0.67}
+    rv[1] # {'Nacl':0.33, 'Si':0.67}
+    rv[2] # 'Na0.33Cl0.5Si0.5'
+    Raises:
+    -------
+    ValueError
+        if ',' is not specified between phases
+    """
+    phase_dict = {}
+    composition_dict = {}
+    composition_str = ""
+    # figure out ratio between phases
+    compound_meta = phase_str.split(",")
+    for el in compound_meta:
+        _el = el.strip()
+        # if no ":" in the string
+        if ":" not in _el:
+            com = _el
+            amount = 1.0
+        # ":" in the string
+        else:
+            meta = _el.split(":")
+            # there is a ":" but nothing follows
+            if not meta[1]:
+                com = meta[0]
+                amount = 1.0
+            # presumably valid input
+            else:
+                com, amount = meta
+        # further verify if it's giving as 'X: 10%' format
+        if isinstance(amount, str):
+            amount = amount.strip()
+            amount = amount.replace("%", "")
+        # construct the not normalized phase dict
+        phase_dict.update({com.strip(): float(amount)})
+
+    # normalize phase ratio for composition dict
+    total = sum(phase_dict.values())
+    for k, v in phase_dict.items():
+        ratio = round(v / total, 2)
+        phase_dict[k] = ratio
+
+    # construct composition_dict
+    for k, v in phase_dict.items():
+        # k is compostring, v is phase ratio
+        try:
+            el_list, sto_list = composition_analysis(k.strip())
+        except ValueError:
+            # getx3 parser can't parse it, set default
+            el_list, sto_list = ([k], [v])
+        for el, sto in zip(el_list, sto_list):
+            # sum element
+            if el in composition_dict:
+                val = composition_dict.get(el)
+                val += sto * v
+                composition_dict.update({el: val})
+            else:
+                # otherwise, just update it
+                composition_dict.update({el: sto * v})
+
+    # finally, construct composition_str
+    for k, v in sorted(composition_dict.items()):
+        composition_str += str(k) + str(v)
+
+    return composition_dict, phase_dict, composition_str
 

@@ -314,4 +314,14 @@ def lastimage(n):
     imsave("/nsls2/xf28id1/xpdacq_data/user_data/tiff_base/" + "light_image" + ".tiff", light_img)
     
 
+#---------------------------------HAB T setpoint threshold--------------------------------------------
+def HAB_Tset(t, threshold, settle_time):
+	caput("XF:28ID1-ES:1{Env:05}LOOP1:SP", t)
+	T_now = hotairblower.get()
 
+	while T_now not in range(t-threshold, t+2*threshold):
+		T_now = hotairblower.get()
+		time.sleep(0.5)
+	time.sleep(settle_time)
+
+	
