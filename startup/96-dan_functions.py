@@ -562,7 +562,8 @@ def get_total_counts():
 
 def _motor_move_scan_shifter_pos(motor, xmin, xmax, numx):
     from epics import caget
-
+    #ensure shutter is closed
+    RE(mv(fs,"Close"))
     I_list = np.zeros(numx)
     dx = (xmax - xmin) / numx
     pos_list = np.linspace(xmin, xmax, numx)
@@ -785,3 +786,5 @@ def phase_parser(phase_str):
 
     return composition_dict, phase_dict, composition_str
 
+
+del pe1c.tiff.stage_sigs[pe1c.proc.reset_filter]

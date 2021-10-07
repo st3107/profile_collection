@@ -1,180 +1,157 @@
 "Define Beamline Modes"
-def high_resolution():
-	print("Resetting white beam slits")
-	wb_slits.inboard.move(-13.05)
-	wb_slits.outboard.move(-6.179438)
+def beam22slit(): 
+	#print("Resetting white beam slits") 2021-3 values
+	#wb_slits.inboard.move(-11.55)
+	#wb_slits.outboard.move(-5.879)
 	
-	print("Resetting Monochromator")
-	sbm.yaw.move(0.00013)
-	sbm.roll.move(0.00010)
-	sbm.pitch.move(-0.07137)
-	sbm.bend.move(2908.9875)
-	sbm.twist.move(0)
+	#print("Resetting Monochromator") # 2021-3 values
+	#sbm.yaw.move(0.00012)
+	#sbm.roll.move(0.0008)
+	#sbm.pitch.move(-0.02827)
+	#sbm.bend.move(2000.0084)
+	#sbm.twist.move(0)
 
 	print("Resetting Mirror")
-	Mirror_VFM.y_upstream.move(-0.7)
-	Mirror_VFM.y_downstream_inboard.move(-0.0202)
-	Mirror_VFM.y_downstream_outboard.move(0.3199)
-	Mirror_VFM.bend_upstream.move(60)
-	Mirror_VFM.bend_downstream.move(60)
+	#Mirror_VFM.y_upstream.move(-1.2493) # 2021-3 values
+	#Mirror_VFM.y_downstream_inboard.move(-0.3179)
+	#Mirror_VFM.y_downstream_outboard.move(-0.0806)
+	Mirror_VFM.bend_upstream.move(100)
+	Mirror_VFM.bend_downstream.move(100)
 
-	print("Resetting BDM Slits")
+	#print("Resetting BDM Slits")
 	#bdm_slits.top.move(999.957)
 	#bdm_slits.bottom.move(-94363.970)
 	#bdm_slits.inboard.move(-7600.960)
 	#bdm_slits.outboard.move(-4100.075)
 
 	print("Resetting OCM Slits")
-	ocm_slits.top.move(3855)
-	ocm_slits.bottom.move(11105)
-	ocm_slits.outboard.move(2055.959)
-	ocm_slits.inboard.move(-1149.037)
-	OCM_table.upstream_jack.move(4.14225)
-	OCM_table.downstream_jack.move(-4.1700)
-	OCM_table.X.move(-8.44701)
+	ocm_slits.top.move(-765.286)
+	ocm_slits.bottom.move(545.00)
+	ocm_slits.outboard.move(2005.959)
+	ocm_slits.inboard.move(-1939.037)
+
+	print("Resetting Anti-scatter Slits")
+	caput('XF:28ID1B-OP{Slt:AS-Ax:T}Mtr.VAL', -24.95948) #Top
+	caput('XF:28ID1B-OP{Slt:AS-Ax:B}Mtr.VAL', -31.49997) #Bottom
+	caput('XF:28ID1B-OP{Slt:AS-Ax:O}Mtr.VAL', -27.89998) #Outboard
+	caput('XF:28ID1B-OP{Slt:AS-Ax:I}Mtr.VAL', 6.09888) #inboard
 	print("Ready to go !")
 
-def high_flux1(): # 10 mm Beam on Mono Ni peak saturation
-	print("Resetting white beam slits")
-	wb_slits.inboard.move(-9.05)
-	wb_slits.outboard.move(-2.125)
+def beam22(): 
+	#print("Resetting white beam slits") 2021-3 values
+	#wb_slits.inboard.move(-11.55)
+	#wb_slits.outboard.move(-5.879)
 	
-	print("Resetting Monochromator")
-	sbm.yaw.move(0.00013)
-	sbm.roll.move(0.00010)
-	sbm.pitch.move(-0.13587)
-	sbm.bend.move(7708.9875)
-	sbm.twist.move(0)
+	#print("Resetting Monochromator") # 2021-3 values
+	#sbm.yaw.move(0.00012)
+	#sbm.roll.move(0.0008)
+	#sbm.pitch.move(-0.02827)
+	#sbm.bend.move(2000.0084)
+	#sbm.twist.move(0)
 
 	print("Resetting Mirror")
-	Mirror_VFM.y_upstream.move(-0.6994)
-	Mirror_VFM.y_downstream_inboard.move(-0.019)
-	Mirror_VFM.y_downstream_outboard.move(0.3195)
-	Mirror_VFM.bend_upstream.move(50)
-	Mirror_VFM.bend_downstream.move(50)
+	#Mirror_VFM.y_upstream.move(-1.2493) # 2021-3 values
+	#Mirror_VFM.y_downstream_inboard.move(-0.3179)
+	#Mirror_VFM.y_downstream_outboard.move(-0.0806)
+	Mirror_VFM.bend_upstream.move(150)
+	Mirror_VFM.bend_downstream.move(150)
 
-	print("Resetting BDM Slits")
+	#print("Resetting BDM Slits")
 	#bdm_slits.top.move(999.957)
 	#bdm_slits.bottom.move(-94363.970)
 	#bdm_slits.inboard.move(-7600.960)
 	#bdm_slits.outboard.move(-4100.075)
 
 	print("Resetting OCM Slits")
-	ocm_slits.top.move(3855)
-	ocm_slits.bottom.move(11105)
-	ocm_slits.outboard.move(2055.959)
-	ocm_slits.inboard.move(-1149.037)
-	OCM_table.upstream_jack.move(1.8665)
-	OCM_table.downstream_jack.move(-4.0372500)
-	#OCM_table.X.move(-8.44701)
+	ocm_slits.top.move(-765.286)
+	ocm_slits.bottom.move(545.00)
+	ocm_slits.outboard.move(2005.959)
+	ocm_slits.inboard.move(-1939.037)
+
+	print("Resetting Anti-scatter Slits")
+	caput('XF:28ID1B-OP{Slt:AS-Ax:T}Mtr.VAL', -24.95948) #Top
+	caput('XF:28ID1B-OP{Slt:AS-Ax:B}Mtr.VAL', -31.49997) #Bottom
+	caput('XF:28ID1B-OP{Slt:AS-Ax:O}Mtr.VAL', -27.89998) #Outboard
+	caput('XF:28ID1B-OP{Slt:AS-Ax:I}Mtr.VAL', 6.09888) #inboard
 	print("Ready to go !")
 
-#8mm is similar to previous
-def high_flux2(): # 8 mm Beam on Mono Ni peak 55000 cts
-	print("Resetting white beam slits")
-	wb_slits.inboard.move(-11.05)
-	wb_slits.outboard.move(-4.179438)
+def beam33(): 
+	#print("Resetting white beam slits") 2021-3 values
+	#wb_slits.inboard.move(-11.55)
+	#wb_slits.outboard.move(-5.879)
 	
-	print("Resetting Monochromator")
-	sbm.yaw.move(0.00013)
-	sbm.roll.move(0.00010)
-	sbm.pitch.move(-0.13587)
-	sbm.bend.move(7708.9875)
-	sbm.twist.move(0)
+	#print("Resetting Monochromator") # 2021-3 values
+	#sbm.yaw.move(0.00012)
+	#sbm.roll.move(0.0008)
+	#sbm.pitch.move(-0.02827)
+	#sbm.bend.move(2000.0084)
+	#sbm.twist.move(0)
 
 	print("Resetting Mirror")
-	Mirror_VFM.y_upstream.move(-0.6994)
-	Mirror_VFM.y_downstream_inboard.move(-0.019)
-	Mirror_VFM.y_downstream_outboard.move(0.3195)
-	Mirror_VFM.bend_upstream.move(50)
-	Mirror_VFM.bend_downstream.move(50)
+	#Mirror_VFM.y_upstream.move(-1.2493) # 2021-3 values
+	#Mirror_VFM.y_downstream_inboard.move(-0.3179)
+	#Mirror_VFM.y_downstream_outboard.move(-0.0806)
+	Mirror_VFM.bend_upstream.move(120)
+	Mirror_VFM.bend_downstream.move(120)
 
-	print("Resetting BDM Slits")
+	#print("Resetting BDM Slits")
 	#bdm_slits.top.move(999.957)
 	#bdm_slits.bottom.move(-94363.970)
 	#bdm_slits.inboard.move(-7600.960)
 	#bdm_slits.outboard.move(-4100.075)
 
 	print("Resetting OCM Slits")
-	ocm_slits.top.move(3855)
-	ocm_slits.bottom.move(11105)
-	ocm_slits.outboard.move(2055.959)
-	ocm_slits.inboard.move(-1149.037)
-	OCM_table.upstream_jack.move(1.8665)
-	OCM_table.downstream_jack.move(-4.0372500)
-	#OCM_table.X.move(-8.44701)
+	ocm_slits.top.move(-765.286)
+	ocm_slits.bottom.move(545.00)
+	ocm_slits.outboard.move(2005.959)
+	ocm_slits.inboard.move(-1939.037)
+
+	print("Resetting Anti-scatter Slits")
+	caput('XF:28ID1B-OP{Slt:AS-Ax:T}Mtr.VAL', -24.90948) #Top
+	caput('XF:28ID1B-OP{Slt:AS-Ax:B}Mtr.VAL', -31.44997) #Bottom
+	caput('XF:28ID1B-OP{Slt:AS-Ax:O}Mtr.VAL', -27.84998) #Outboard
+	caput('XF:28ID1B-OP{Slt:AS-Ax:I}Mtr.VAL', 6.19888) #inboard
 	print("Ready to go !")
 
-
-def high_flux3(): # 6 mm Beam on Mono Ni peak 40000 cts
-	print("Resetting white beam slits")
-	wb_slits.inboard.move(-12.05)
-	wb_slits.outboard.move(-5.179438)
+def beam55(): 
+	#print("Resetting white beam slits") 2021-3 values
+	#wb_slits.inboard.move(-11.55)
+	#wb_slits.outboard.move(-5.879)
 	
-	print("Resetting Monochromator")
-	sbm.yaw.move(0.00013)
-	sbm.roll.move(0.00010)
-	sbm.pitch.move(-0.13587)
-	sbm.bend.move(7708.9875)
-	sbm.twist.move(0)
+	#print("Resetting Monochromator") # 2021-3 values
+	#sbm.yaw.move(0.00012)
+	#sbm.roll.move(0.0008)
+	#sbm.pitch.move(-0.02827)
+	#sbm.bend.move(2000.0084)
+	#sbm.twist.move(0)
 
 	print("Resetting Mirror")
-	Mirror_VFM.y_upstream.move(-0.6994)
-	Mirror_VFM.y_downstream_inboard.move(-0.019)
-	Mirror_VFM.y_downstream_outboard.move(0.3195)
-	Mirror_VFM.bend_upstream.move(50)
-	Mirror_VFM.bend_downstream.move(50)
+	#Mirror_VFM.y_upstream.move(-1.2493) # 2021-3 values
+	#Mirror_VFM.y_downstream_inboard.move(-0.3179)
+	#Mirror_VFM.y_downstream_outboard.move(-0.0806)
+	Mirror_VFM.bend_upstream.move(100)
+	Mirror_VFM.bend_downstream.move(100)
 
-	print("Resetting BDM Slits")
+	#print("Resetting BDM Slits")
 	#bdm_slits.top.move(999.957)
 	#bdm_slits.bottom.move(-94363.970)
 	#bdm_slits.inboard.move(-7600.960)
 	#bdm_slits.outboard.move(-4100.075)
 
 	print("Resetting OCM Slits")
-	ocm_slits.top.move(3855)
-	ocm_slits.bottom.move(11105)
-	ocm_slits.outboard.move(2055.959)
-	ocm_slits.inboard.move(-1149.037)
-	OCM_table.upstream_jack.move(1.8665)
-	OCM_table.downstream_jack.move(-4.0372500)
-	#OCM_table.X.move(-8.44701)
+	ocm_slits.top.move(-665.286)
+	ocm_slits.bottom.move(645.00)
+	ocm_slits.outboard.move(2105.959)
+	ocm_slits.inboard.move(-1839.037)
+
+	print("Resetting Anti-scatter Slits")
+	caput('XF:28ID1B-OP{Slt:AS-Ax:T}Mtr.VAL', -24.80948) #Top
+	caput('XF:28ID1B-OP{Slt:AS-Ax:B}Mtr.VAL', -31.34997) #Bottom
+	caput('XF:28ID1B-OP{Slt:AS-Ax:O}Mtr.VAL', -27.69998) #Outboard
+	caput('XF:28ID1B-OP{Slt:AS-Ax:I}Mtr.VAL', 6.29888) #inboard
 	print("Ready to go !")
 
-def high_flux4(): # 4 mm Beam on Mono Ni peak 25000 cts same focus as above
-	print("Resetting white beam slits")
-	wb_slits.inboard.move(-13.05)
-	wb_slits.outboard.move(-6.179438)
-	
-	print("Resetting Monochromator")
-	sbm.yaw.move(0.00013)
-	sbm.roll.move(0.00010)
-	sbm.pitch.move(-0.13587)
-	sbm.bend.move(7708.9875)
-	sbm.twist.move(0)
 
-	print("Resetting Mirror")
-	Mirror_VFM.y_upstream.move(-0.6994)
-	Mirror_VFM.y_downstream_inboard.move(-0.019)
-	Mirror_VFM.y_downstream_outboard.move(0.3195)
-	Mirror_VFM.bend_upstream.move(50)
-	Mirror_VFM.bend_downstream.move(50)
-
-	print("Resetting BDM Slits")
-	#bdm_slits.top.move(999.957)
-	#bdm_slits.bottom.move(-94363.970)
-	#bdm_slits.inboard.move(-7600.960)
-	#bdm_slits.outboard.move(-4100.075)
-
-	print("Resetting OCM Slits")
-	ocm_slits.top.move(3855)
-	ocm_slits.bottom.move(11105)
-	ocm_slits.outboard.move(2055.959)
-	ocm_slits.inboard.move(-1149.037)
-	OCM_table.upstream_jack.move(1.8665)
-	OCM_table.downstream_jack.move(-4.0372500)
-	#OCM_table.X.move(-8.44701)
-	print("Ready to go !")
 
 def saxs():
 	print("Resetting white beam slits")
@@ -211,41 +188,6 @@ def saxs():
 	OCM_table.X.move(-8.44701)
 	print("Ready to go !")
 
-#test mode for 1 mm beam on mono
-def test():
-	print("Resetting white beam slits")
-	wb_slits.inboard.move(-13.6)
-	wb_slits.outboard.move(-7.62)
-	
-	print("Resetting Monochromator")
-	sbm.yaw.move(0.0)
-	sbm.roll.move(0.0)
-	sbm.pitch.move(-0.06689)
-	sbm.bend.move(2300)
-	sbm.twist.move(0.0000)
-
-	print("Resetting Mirror")
-	Mirror_VFM.y_upstream.move(-0.7)
-	Mirror_VFM.y_downstream_inboard.move(-0.02)
-	Mirror_VFM.y_downstream_outboard.move(0.32)
-	Mirror_VFM.bend_upstream.move(70)
-	Mirror_VFM.bend_downstream.move(70)
-
-	print("Resetting BDM Slits")
-	#bdm_slits.top.move(999.957)
-	#bdm_slits.bottom.move(-94363.970)
-	#bdm_slits.inboard.move(-7600.960)
-	#bdm_slits.outboard.move(-4100.075)
-
-	print("Resetting OCM Slits")
-	ocm_slits.top.move(-2065.0)
-	ocm_slits.bottom.move(2055.0)
-	ocm_slits.outboard.move(635.959)
-	ocm_slits.inboard.move(-344.037)
-	OCM_table.upstream_jack.move(4.14225)
-	OCM_table.downstream_jack.move(-4.1700)
-	OCM_table.X.move(-8.44701)
-	print("Ready to go !")
 
 def BDM_plot():
 	from mpl_toolkits.mplot3d import Axes3D
@@ -321,6 +263,34 @@ def HAB_Tset(t, threshold, settle_time):
 
 	while T_now not in range(t-threshold, t+2*threshold):
 		T_now = hotairblower.get()
+		time.sleep(0.5)
+	time.sleep(settle_time)
+
+#---------------------------------Magnet I setpoint threshold--------------------------------------------
+def Magnet_Iset(i, settle_time): # rounds up the setpoint to a integer thres
+	RE(mv(magnet.setpoint,i)) 
+	I_now = magnet.readback.get()
+
+	while np.around(I_now)!=i :
+		I_now = magnet.readback.get()
+		time.sleep(0.5)
+	time.sleep(settle_time)
+
+def Magnet_Iset2(i, thershold_1_D_point,settle_time): 
+	RE(mv(magnet.setpoint,i)) 
+	I_now = magnet.readback.get()
+
+	while (I_now*10) not in range(np.around((i-thershold_1_D_point)*10,1), np.around((i+thershold_1_D_point)*10,1)):
+		I_now = magnet.readback.get()
+		time.sleep(0.5)
+	time.sleep(settle_time)
+
+def Cryostat_CF(t, settle_time): # rounds up the setpoint to a integer thres
+	RE(mv(cryostat1,t)) 
+	t_now = caget('XF:28ID1-ES1:LS335:{CryoStat}:IN2')
+
+	while np.around(t_now)!=i :
+		t_now = caget('XF:28ID1-ES1:LS335:{CryoStat}:IN2')
 		time.sleep(0.5)
 	time.sleep(settle_time)
 

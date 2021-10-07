@@ -282,7 +282,7 @@ linkam_furnace.setpoint.name = 'temperature_setpoint'
 
 ## MA
 class Magnet(PVPositioner):
-    readback = Cpt(EpicsSignalRO, 'IPRG')
+    readback = Cpt(EpicsSignalRO, 'IMAG')
     setpoint = Cpt(EpicsSignal, 'SETIPRG')
     done = Cpt(EpicsSignalRO, 'SETI-Done1')
 
