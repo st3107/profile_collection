@@ -305,3 +305,15 @@ def Humidity_set(a, b, threshold, settle_time):
 		H_now = readRH(verbosity=2)
 		time.sleep(0.5)
 	time.sleep(settle_time)
+
+#---------------------------------Reaction cell--------------------------------------------
+'''
+def HAB_Tset(t, threshold, settle_time):
+	caput("Set point PV", t)
+	T_now = caget("Readback PV")
+
+	while T_now not in range(t-threshold, t+2*threshold):
+		T_now = caget("Readback PV")
+		time.sleep(0.5)
+	time.sleep(settle_time)
+'''
