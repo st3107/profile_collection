@@ -125,9 +125,17 @@ def take_dark(cam, light_field, dark_field_name):
     df_sig.stashed_datakey = desc[light_field]
 
 
+class XPDFileStoreTIFFSquashing(FileStoreTIFFSquashing):
+    def describe(self):
+        description = super().describe()
+        shape = list(description["pe1c_image"]["shape"])
+        shape[0] = self.get_frames_per_point()
+        shape = tuple(shape)
+        description["pe1c_image"]["shape"] = shape
+        return description
 
 
-class XPDTIFFPlugin(TIFFPlugin, FileStoreTIFFSquashing,
+class XPDTIFFPlugin(TIFFPlugin, XPDFileStoreTIFFSquashing,
                     FileStoreIterativeWrite):
     pass
 
@@ -358,13 +366,13 @@ pe1 = PerkinElmerStandard1('XF:28ID1-ES{Det:PE1}', name='pe1', read_attrs=['tiff
 
 #temporary disable detector for PE2 testing -MA 11/25/19 and 12/09/21
 pe1c = PerkinElmerContinuous1('XF:28ID1-ES{Det:PE1}', name='pe1c',
-                             read_attrs=['tiff', 'stats1.total'],
+                            read_attrs=['tiff', 'stats1.total'],
                              plugin_name='tiff')
 ################
 
 
 ################
-#enabled by MA during PE2 detector testing - 11/25/2019 and 12/09/21
+#enabled by MA during PE2 SAXS - 01/2022 and 12/09/22
 #pe1c = PerkinElmerContinuous2('XF:28ID1-ES{Det:PE2}', name='pe1c',
 #                             read_attrs=['tiff', 'stats1.total'],
 #                             plugin_name='tiff')
