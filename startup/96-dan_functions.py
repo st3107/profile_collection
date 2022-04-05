@@ -77,8 +77,9 @@ def show_me_db(
     return_im=False,
     return_dark=False,
     new_db=False,
+    suffix="_image",
 ):
-    my_det_probably = db[my_id].start["detectors"][0] + "_image"
+    my_det_probably = db[my_id].start["detectors"][0] + suffix
     if new_db:
         my_im = (db[my_id].table(fill=True)[my_det_probably][1][0]).astype(float)
     else:

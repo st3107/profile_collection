@@ -30,33 +30,37 @@ class PilatusDetectorCamV33(PilatusDetectorCam):
 
 class PilatusV33(SingleTriggerV33, PilatusDetector):
     cam = Cpt(PilatusDetectorCamV33, 'cam1:')
-    image = Cpt(ImagePlugin, 'image1:')
-#    stats1 = Cpt(StatsPluginV33, 'Stats1:')
-#    stats2 = Cpt(StatsPluginV33, 'Stats2:')
-#    stats3 = Cpt(StatsPluginV33, 'Stats3:')
-#    stats4 = Cpt(StatsPluginV33, 'Stats4:')
-#    stats5 = Cpt(StatsPluginV33, 'Stats5:')
-#    roi1 = Cpt(ROIPlugin, 'ROI1:')
-#    roi2 = Cpt(ROIPlugin, 'ROI2:')
-#    roi3 = Cpt(ROIPlugin, 'ROI3:')
-#    roi4 = Cpt(ROIPlugin, 'ROI4:')
-#    proc1 = Cpt(ProcessPlugin, 'Proc1:')
+    #stats1 = Cpt(StatsPluginV33, 'Stats1:')
+    #stats2 = Cpt(StatsPluginV33, 'Stats2:')
+    #stats3 = Cpt(StatsPluginV33, 'Stats3:')
+    #stats4 = Cpt(StatsPluginV33, 'Stats4:')
+    #stats5 = Cpt(StatsPluginV33, 'Stats5:')
+    #roi1 = Cpt(ROIPlugin, 'ROI1:')
+    #roi2 = Cpt(ROIPlugin, 'ROI2:')
+    #roi3 = Cpt(ROIPlugin, 'ROI3:')
+    #roi4 = Cpt(ROIPlugin, 'ROI4:')
+    #proc1 = Cpt(ProcessPlugin, 'Proc1:')
 
     tiff = Cpt(TIFFPluginWithFileStore,
                suffix='TIFF1:',
-               write_path_template='/nsls2/data/pdf/legacy/raw/pilatus300/%Y/%m/%d/',
+               write_path_template='/nsls2/data/pdf/legacy/raw/pilatus1_data/%Y/%m/%d/',
                root='/nsls2/data/pdf/legacy/raw')
 
-    def setExposureTime(self, exposure_time, verbosity=3):
-        self.cam.acquire_time.put(exposure_time)
-        self.cam.acquire_period.put(exposure_time+.1)
+    
+    def set_exposure_time(self, exposure_time, verbosity=3):
+        yield from bps.mv(self.cam.acquire_time, exposure_time, self.cam.acquire_period, exposure_time+.1)
+        # self.cam.acquire_time.put(exposure_time)
+        # self.cam.acquire_period.put(exposure_time+.1)
+    
+    def set_num_images(self, num_images):
+        yield from bps.mv(self.cam.num_images, num_images)
+        # self.cam.num_images = num_images
+
+pilatus1 = PilatusV33('XF:28ID1-ES{Det:Pilatus}', name='pilatus1_data')
+pilatus1.tiff.read_attrs = []
+pilatus1.tiff.kind = 'normal'
 
 
-pilatus300 = PilatusV33('XF:28ID1-ES{Det:PIL3X}:', name='pilatus300')
-pilatus300.tiff.read_attrs = []
-
-#pilatus300.stats3.total.kind = 'hinted'
-#pilatus300.stats4.total.kind = 'hinted'
 
 
 
